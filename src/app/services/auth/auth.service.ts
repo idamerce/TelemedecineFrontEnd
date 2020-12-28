@@ -1,43 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient ,HttpHeaders} from '@angular/common/http';
-import { RegisterRequest } from '../../models/RegisterRequest';
-import { LoginRequest } from '../../models/LoginRequest';
-import { JwtAuthResponse } from '../../models/JwtAuthResponse';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { LocalStorageService } from 'ngx-webstorage';
-import {URL} from '../../models/URL';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+const AUTH_API = 'http://localhost:8080/api/auth/';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  userObservable = new BehaviorSubject('');
+  currentUserObservable = this.userObservable.asObservable();
+  constructor(private http: HttpClient) { }
 
-  constructor(private httpClient : HttpClient,private localStorageService:LocalStorageService) { }
-
-  url:string=URL+"/api/auth";
-
-  register(registerRequest:RegisterRequest):Observable<any>{
-  	return this.httpClient.post(this.url+"/signup",registerRequest);
+  login(email,password): Observable<any> {
+    return this.http.post(AUTH_API + 'signin', {
+      username: email,
+      password: password
+    }, httpOptions);
   }
-
-  login(loginRequest:LoginRequest):Observable<boolean>{
-  	return this.httpClient.post<JwtAuthResponse>(this.url+"/login",loginRequest).pipe(map(data=>{
-  			this.localStorageService.store("authenticationToken",data.authenticationToken);
-  			this.localStorageService.store("username",data.username);
-  			this.localStorageService.store("user",data.user);
-  			return true;
-  	}));
+  register(login,nom,prenom,cni,ville,adresse,sexe,password): Observable<any> {
+    return this.http.post(AUTH_API + 'signup', {
+      login: login,
+      nom: nom,
+      prenom: prenom,
+      ville: ville,
+      adresse: adresse,
+      sexe: sexe,
+      cni: cni,
+      password: password
+    }, httpOptions);
   }
-
-  isAuthenticated():boolean{
-  	return this.localStorageService.retrieve("username")!=null;
-  }
-
-  logout(){
-  	this.localStorageService.clear("authenticationToken");
-  	this.localStorageService.clear("username");
-  	this.localStorageService.clear("user");
-  } 
-
 }

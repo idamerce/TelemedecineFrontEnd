@@ -10,21 +10,21 @@
 					<h1>Login</h1>
 				</div>
 			   </div> 
-                <form [formGroup]="loginForm" (ngSubmit)="login()" method="post" name="login" novalidate="novalidate">
+                <form [formGroup]="loginForm" >
+                  <div class="form-group">
+                     <label for="login">User Name</label>
+                     <input type="email" formControlName="login"  class="form-control"   aria-describedby="emailHelp" placeholder="Enter email">
+                  </div>
                            <div class="form-group">
-                              <label for="exampleInputEmail1">User Name</label>
-                              <input type="email" [formControlName]="'username'" name="userName" class="form-control"   aria-describedby="emailHelp" placeholder="Enter email">
-                           </div>
-                           <div class="form-group">
-                              <label for="exampleInputEmail1">Password</label>
-                              <input type="password" [formControlName]="'password'" name="password"   class="form-control" aria-describedby="emailHelp" placeholder="Enter Password">
+                              <label for="password">Password</label>
+                              <input type="password" formControlName="password" id="password"   class="form-control" aria-describedby="emailHelp" placeholder="Enter Password">
                            </div>
                            <div class="form-group">
                               <p class="text-center">By signing up you accept our <a href="#">Terms Of Use</a></p>
                            </div>
                            <div class="col-md-12 text-center ">
-                              <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm"
-                                 (click)="login()"
+                              <button type="submit"  [disabled]="loginForm.invalid" class=" btn btn-block mybtn btn-primary tx-tfm"
+                                 (click)="onLoginFormSubmit()"
                               >Login</button>
                            </div>
                            <div class="col-md-12 ">
@@ -52,22 +52,43 @@
 					</div>
 				</div> 
 
-                <form [formGroup]="registerForm" (ngSubmit)="register()" name="registration" novalidate="novalidate">
+                <form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit()" name="registration" novalidate="novalidate">
                            <div class="form-group">
-                              <label for="username">User Name</label>
-                              <input type="text" name="username" [formControlName]="'username'" class="form-control" id="firstname" aria-describedby="emailHelp" placeholder="Enter Firstname">
+                              <label for="username">Login</label>
+                              <input type="email"   formControlName="login" class="form-control" id="login"  placeholder="Enter Firstname">
                            </div>
                            <div class="form-group">
-                              <label for="email">Email address</label>
-                              <input type="email" name="email"  [formControlName]="'email'" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                              <label for="nom">Nom</label>
+                              <input type="text"   formControlName="nom" class="form-control" id="nom"  placeholder="Enter votre nom">
+                           </div>
+                           <div class="form-group">
+                              <label for="prenom">Prenom</label>
+                              <input type="text"  formControlName="prenom" class="form-control" id="prenom"  placeholder="Enter votre prenom">
+                           </div>
+                           <div class="form-group">
+                              <label for="sexe">Sexe</label>
+                              <input type="text"   formControlName="sexe" class="form-control" id="sexe"  placeholder="Enter votre sexe">
+                           </div>
+                           <div class="form-group">
+                              <label for="cni">CNI</label>
+                              <input type="text"   formControlName="cni" class="form-control" id="cni"  placeholder="Enter votre cni">
+                           </div>
+               
+                           <div class="form-group">
+                              <label for="ville">Ville</label>
+                              <input type="email"  formControlName="ville" class="form-control" id="ville"  placeholder="Enter votre ville">
+                           </div>
+                           <div class="form-group">
+                              <label for="adresse">Adresse</label>
+                              <input type="text"   formControlName="adresse" class="form-control" id="adresse"  placeholder="Enter votre adresse">
                            </div>
                            <div class="form-group">
                               <label for="password">Password</label>
-                              <input type="password" name="password"  [formControlName]="'password'" id="password" class="form-control" aria-describedby="emailHelp" placeholder="Enter Password">
+                              <input type="password" name="password"  formControlName="password" id="password" class="form-control"  placeholder="Enter Password">
                            </div>
                            <div class="form-group">
-                              <label for="confirmPassword">Validate Password</label>
-                              <input type="password" name="confirmPassword"  [formControlName]="'confirmPassword'" id="password" class="form-control" aria-describedby="emailHelp" placeholder="tape pasword again">
+                              <label for="confirmPassword1">Validate Password</label>
+                              <input type="password" name="confirmPassword"  formControlName="confirmPassword" id="password1" class="form-control"  placeholder="tape pasword again">
                            </div>
                            <div class="col-md-12 text-center mb-3">
                               <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Register</button>
