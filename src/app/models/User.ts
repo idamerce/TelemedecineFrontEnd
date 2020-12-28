@@ -1,13 +1,14 @@
 import {Role} from "./Role";
 
 export class User {
-	idUser:number;
-	nomUser:string ;
+	id:number;
+	nom:string ;
+	prenom:string ;
+	sexe:string ;
 	adresse:string ;
-	tel:string ;
-	email:string ;
-	userName:string ;
- 	activated:boolean;
+	ville:string;
+	login:string ;
+ 	activated:boolean ;
 	roles :Role[] ;
 
  
