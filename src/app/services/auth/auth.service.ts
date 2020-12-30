@@ -18,19 +18,16 @@ export class AuthService {
 
   login(email,password): Observable<any> {
     return this.http.post(AUTH_API + 'signin', {
-      username: email,
+      email: email,
       password: password
     }, httpOptions);
   }
-  register(login,nom,prenom,cni,ville,adresse,sexe,password): Observable<any> {
+  register(email,fullname,phone,photo,password): Observable<any> {
     return this.http.post(AUTH_API + 'signup', {
-      login: login,
-      nom: nom,
-      prenom: prenom,
-      ville: ville,
-      adresse: adresse,
-      sexe: sexe,
-      cni: cni,
+      email:email,
+      fullname: fullname,
+      phone: phone,
+      photo: photo,
       password: password
     }, httpOptions);
   }

@@ -8,7 +8,7 @@ import { RegisterRequest } from '../../models/RegisterRequest';
 import { LoginRequest } from '../../models/LoginRequest';
  import { MessageService }  from "../../services/message.service";
 import { TokenStorageService } from 'src/app/services/auth/token-storage.service';
-import { emailValidator } from './utils/app-validators';
+import { emailValidator, matchingPasswords } from './utils/app-validators';
 
 @Component({
   selector: 'app-auth',
@@ -46,30 +46,27 @@ export class AuthComponent implements OnInit {
     sessionStorage.setItem('isLoggedInAdmin',"false");
     sessionStorage.setItem('isLoggedMedecin',"false");
     this.loginForm = this.formBuilder.group({
-      'login': ['', Validators.compose([Validators.required, emailValidator])],
+      'email': ['', Validators.compose([Validators.required, emailValidator])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(6)])] 
     });
 
     this.registerForm = this.formBuilder.group({
-      'nom': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      'prenom': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      'ville': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      'login': ['', Validators.compose([Validators.required, emailValidator])],
-      'sexe': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      'adresse': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-      'cni': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      'email': ['', Validators.compose([Validators.required, emailValidator])],
+      'fullname': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      'phone': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      'photo': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      'password': ['', Validators.compose([Validators.required, Validators.minLength(6)])],
       //'phoneNumber': ['',[Validators.required,Validators.pattern(/[0-9]{9,9}/)]],
-      'password': ['', Validators.required],
      'confirmPassword': ['', Validators.required]
     }
-   // ,{validator: matchingPasswords('password', 'confirmPassword')}
+    ,{validator: matchingPasswords('password', 'confirmPassword')}
     );
 
   }
   response:any;
   public onLoginFormSubmit() {
     console.log(this.loginForm.value);
-    this.authService.login(this.loginForm.value.login, this.loginForm.value.password).subscribe(
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(
       data => {
 
         console.log('actual user:',data);
@@ -84,7 +81,7 @@ export class AuthComponent implements OnInit {
         sessionStorage.setItem('role',data.roles[0].name);
         
         switch (data.roles[0].name) {
-          case "CLIENT_ROLE":
+          case "ROLE_PATIENT":
             sessionStorage.setItem('isLoggedInClient',"true");
 
             //On doit emettre la valeur provenant du local storage pour eviter les bugs au démarrage de l'App
@@ -94,7 +91,7 @@ export class AuthComponent implements OnInit {
         //    window.location.reload();
             this.router.navigate(['/']);
             break;
-          case "LIVREUR_ROLE":
+          case "ROLE_PATIENT":
             sessionStorage.setItem('isLoggedInAdmin',"true");
             this.router.navigate(['/']);
               break;
@@ -121,12 +118,11 @@ export class AuthComponent implements OnInit {
     this.isProcessing= true;
     console.log('Signing up :',this.registerForm.value)
 
-    this.authService.register(this.registerForm.value.login,this.registerForm.value.nom,
-      this.registerForm.value.prenom,
-      this.registerForm.value.cni,
-      this.registerForm.value.ville,
-      this.registerForm.value.adresse,
-      this.registerForm.value.sexe,
+    this.authService.register(
+      this.registerForm.value.email,
+      this.registerForm.value.fullname,
+      this.registerForm.value.phone,
+      this.registerForm.value.photo,
       this.registerForm.value.password
       ).subscribe(
       data => {
